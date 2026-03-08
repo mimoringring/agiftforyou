@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>For Jacob</title>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#0f1f14;
+  font-family:Georgia, serif;
+  color:white;
+  overflow:hidden;
+}
+
+/* INTRO */
+#intro{
+  position:absolute;
+  width:100%;
+  height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction: column;
+  font-size:40px;
+  cursor:pointer;
+  transition:opacity 1s;
+  text-align:center;
+  padding:20px;
+  box-sizing:border-box;
+}
+#intro #subtitle{
+  font-size:18px;
+  margin-top:10px;
+  color:#cdebd4;
+  line-height:1.4;
+}
+
+/* PLAYER AREA */
+#playerArea{
+  display:none;
+  text-align:center;
+  position:relative;
+  z-index:2;
+}
+
+/* PLAYER */
+#player{
+  width:300px;
+  height:200px;
+  background:#1f3d2b;
+  border-radius:10px;
+  position:relative;
+  margin:auto;
+  cursor:pointer;
+  z-index:3;
+}
+
+/* LID */
+#lid{
+  position:absolute;
+  width:100%;
+  height:100%;
+  background:#2c4a36;
+  border-radius:10px;
+  transition:transform 0.6s;
+  transform-origin:top;
+  z-index:5;
+}
+.open{
+  transform:rotateX(70deg);
+}
+
+/* DISPLAY */
+.display{
+  position:absolute;
+  top:15px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#0a1510;
+  color:#8fd19e;
+  font-size:12px;
+  padding:4px 10px;
+  border-radius:4px;
+  letter-spacing:2px;
+  z-index:6;
+}
+
+/* LED */
+#led{
+  position:absolute;
+  top:18px;
+  right:20px;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#02150a;
+  box-shadow:0 0 3px #000;
+  z-index:6;
+  transition:0.2s;
+}
+
+/* LASER ARM */
+#laser{
+  position:absolute;
+  top:65px;
+  left:105px;
+  width:85px;
+  height:6px;
+  background:#444;
+  border-radius:3px;
+  box-shadow:0 0 4px rgba(0,0,0,0.6);
+  transform-origin:left;
+  transition:0.5s;
+  z-index:4; /* Above CD but under lid */
+}
+.reading{
+  transform:rotate(18deg);
+}
+
+/* SPEAKERS */
+.speaker{
+  position:absolute;
+  width:40px;
+  height:80px;
+  background:repeating-linear-gradient(
+    0deg,
+    #0e1c14,
+    #0e1c14 2px,
+    #1f3d2b 2px,
+    #1f3d2b 4px
+  );
+  top:60px;
+  border-radius:4px;
+}
+.speaker.left{left:10px;}
+.speaker.right{right:10px;}
+
+/* BUTTONS */
+.buttons{
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:10px;
+}
+.btn{
+  width:30px;
+  height:30px;
+  background:#2c4a36;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  color:#cdebd4;
+  box-shadow:0 2px 4px rgba(0,0,0,0.4);
+  cursor:pointer;
+}
+
+/* DISC (RAINBOW CD) */
+#disc{
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  position:absolute;
+  right:-160px;
+  top:40px;
+  cursor:pointer;
+  transition:all 0.6s ease;
+  background:
+    radial-gradient(circle at center,#111 6px,#ddd 8px,#bbb 40px,#eee 60px),
+    conic-gradient(
+      #ff4d4d,#ffa64d,#ffff66,#66ff99,#66ccff,#cc66ff,#ff4da6,#ff4d4d
+    );
+  box-shadow:
+    inset -20px 0 30px rgba(255,255,255,0.4),
+    inset 20px 0 30px rgba(0,0,0,0.3),
+    0 0 10px rgba(255,255,255,0.3);
+  z-index:3;
+}
+
+/* SONG TITLE */
+#songTitle{
+  margin-top:40px;
+  font-size:18px;
+  opacity:0.9;
+}
+
+/* EASTER EGG MODAL */
+#easterModal{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background:#1f3d2b;
+  padding:30px 50px;
+  border-radius:15px;
+  color:#cdebd4;
+  font-size:24px;
+  display:none;
+  z-index:100;
+  text-align:center;
+  box-shadow:0 0 20px rgba(255,255,255,0.5);
+}
+
+/* EASTER STAR PARTICLES */
+.particle{
+  position:absolute;
+  width:4px;
+  height:4px;
+  background:white;
+  border-radius:50%;
+  pointer-events:none;
+  opacity:1;
+  z-index:8;
+  box-shadow:0 0 6px #fff, 0 0 10px #fffb7d;
+}
+
+/* STARS */ 
+
+.stars{ 
+position:fixed; 
+width:100%; 
+height:100%; 
+z-index:-1; } 
+
+.star{ position:absolute; 
+width:2px; 
+height:2px; 
+background:white; 
+opacity:0.8; 
+animation:twinkle 4s infinite alternate; 
+} 
+
+@keyframes twinkle{ 
+from{opacity:0.2} 
+to{opacity:1} 
+}
+
+</style>
+</head>
+<body>
+
+<div id="intro">
+  For you, Jacob ...
+  <p id="subtitle">17 songs for your 17th birthday, I wish you love and warmth.</p>
+</div>
+
+<div id="playerArea">
+<div id="player">
+  <div class="display">STARGAZER MIX</div>
+  <div id="led"></div>
+  <div id="lid"></div>
+  <div id="laser"></div>
+  <div class="speaker left"></div>
+  <div class="speaker right"></div>
+
+  <div class="buttons">
+    <div class="btn" id="prev">⏮</div>
+    <div class="btn" id="play">▶</div>
+    <div class="btn" id="pause">⏸</div>
+    <div class="btn" id="next">⏭</div>
+  </div>
+
+  <div id="disc"></div>
+</div>
+<div id="songTitle">Tap the CD player</div>
+</div>
+
+<div id="easterModal">You found me, hehe! Mwa!💋</div>
+
+<audio id="audio"></audio>
+<audio id="popAudio" src="pop.mp3"></audio>
+
+<script>
+
+/* INTRO */
+const intro=document.getElementById("intro")
+const playerArea=document.getElementById("playerArea")
+intro.onclick=()=>{
+  intro.style.opacity=0
+  setTimeout(()=>{
+    intro.style.display="none"
+    playerArea.style.display="block"
+  },1000)
+}
+
+/* PLAYER OPEN */
+const player=document.getElementById("player")
+const lid=document.getElementById("lid")
+let opened=false
+player.onclick=()=>{
+  if(!opened){
+    lid.classList.add("open")
+    opened=true
+  }
+}
+
+/* PLAYLIST */
+const songs=[
+  {file:"song1.mp3",title:"54 Ultra - Upside Down"},
+  {file:"song2.mp3",title:"American Flyer - Light Of Your Love"},
+  {file:"song3.mp3",title:"American Flyer - Back In '57"},
+  {file:"song4.mp3",title:"Barry Manilow - Can't Smile Without You"},
+  {file:"song5.mp3",title:"Satellite Lovers - Best Friend"},
+  {file:"song6.mp3",title:"The Fleetwoods - Come Softly To Me"},
+  {file:"song7.mp3",title:"D'Sound - Do I Need A Reason"},
+  {file:"song8.mp3",title:"Danny & The Dreamers - Eternal Love"},
+  {file:"song9.mp3",title:"Father John Misty - Real Love Baby"},
+  {file:"song10.mp3",title:"FUR - Holding Up The Sun"},
+  {file:"song11.mp3",title:"Her's - If You Know What's Right"},
+  {file:"song12.mp3",title:"The Emkays - Make It True"},
+  {file:"song13.mp3",title:"Bread - Make It with You"},
+  {file:"song14.mp3",title:"Chris Montez - The More I See You"},
+  {file:"song15.mp3",title:"Thee Heart Tones - Forever & Ever"},
+  {file:"song16.mp3",title:"The Beatles - Till There Was You"},
+  {file:"song17.mp3",title:"The Softies - You and Only You"}
+]
+let currentSong=0
+const disc=document.getElementById("disc")
+const audio=document.getElementById("audio")
+const title=document.getElementById("songTitle")
+const led=document.getElementById("led")
+const laser=document.getElementById("laser")
+const popAudio=document.getElementById("popAudio")
+
+/* DISC ROTATION */
+let rotation=0
+let spinning=false
+function spinDisc(){
+  if(spinning){
+    rotation+=0.4
+    disc.style.transform="rotate("+rotation+"deg)"
+    requestAnimationFrame(spinDisc)
+  }
+}
+
+/* DISC CLICK */
+disc.onclick=()=>{
+  if(opened){
+    disc.style.right="90px"
+    disc.style.top="40px"
+    playSong()
+  }
+}
+
+/* PLAY/PAUSE/NEXT/PREV */
+function playSong(){
+  audio.src=songs[currentSong].file
+  audio.play()
+  title.innerText="Now Playing: "+songs[currentSong].title
+  led.style.background="#35ff8a"
+  led.style.boxShadow="0 0 8px #35ff8a,0 0 16px #35ff8a"
+  laser.classList.add("reading")
+  spinning=true
+  spinDisc()
+}
+document.getElementById("play").onclick=()=>{audio.play(); led.style.background="#35ff8a"; led.style.boxShadow="0 0 8px #35ff8a,0 0 16px #35ff8a"; laser.classList.add("reading"); spinning=true; spinDisc();}
+document.getElementById("pause").onclick=()=>{audio.pause(); spinning=false; led.style.background="#02150a"; led.style.boxShadow="0 0 3px #000"; laser.classList.remove("reading");}
+document.getElementById("next").onclick=()=>{currentSong++; if(currentSong>=songs.length)currentSong=0; playSong();}
+document.getElementById("prev").onclick=()=>{currentSong--; if(currentSong<0)currentSong=songs.length-1; playSong();}
+audio.addEventListener("ended",()=>{currentSong++; if(currentSong<songs.length){playSong()}else{title.innerText="Playlist finished 💿"; spinning=false; led.style.background="#02150a"; laser.classList.remove("reading");}})
+
+/* EASTER EGG STAR */
+let clickCount=0
+const modal=document.getElementById("easterModal")
+const easterStar=document.createElement("div")
+easterStar.className="easter-star"
+easterStar.style.top="15%"
+easterStar.style.left="60%"
+easterStar.style.width="20px"
+easterStar.style.height="20px"
+easterStar.style.clipPath="polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)"
+easterStar.style.background="white"
+easterStar.style.position="absolute"
+document.body.appendChild(easterStar)
+
+function createParticles(x,y){
+  for(let i=0;i<20;i++){
+    let p=document.createElement("div")
+    p.className="particle"
+    p.style.left=x+"px"
+    p.style.top=y+"px"
+    document.body.appendChild(p)
+    let angle=Math.random()*2*Math.PI
+    let distance=20+Math.random()*40
+    p.animate([
+      {transform:`translate(0,0)`,opacity:1},
+      {transform:`translate(${Math.cos(angle)*distance}px,${Math.sin(angle)*distance}px)`,opacity:0}
+    ],{duration:800,fill:'forwards'})
+    setTimeout(()=>p.remove(),800)
+  }
+}
+
+easterStar.onclick=()=>{
+  clickCount++
+  easterStar.style.transform="scale("+(1+clickCount*0.3)+")"
+  if(clickCount>=5){
+    popAudio.play()
+    createParticles(easterStar.offsetLeft,easterStar.offsetTop)
+    easterStar.remove()
+    setTimeout(()=>{modal.style.display="block"},2000)
+  }
+}
+modal.onclick=()=>{ modal.style.display="none" }
+
+/* BACKGROUND STARS */
+for(let i=0;i<100;i++){
+  const star=document.createElement("div")
+  star.className="star"
+  star.style.top=Math.random()*100+"%"
+  star.style.left=Math.random()*100+"%"
+  star.style.animationDuration=(Math.random()*2+1)+"s"
+  star.style.animationDelay=(Math.random()*2)+"s"
+  document.body.appendChild(star)
+}
+
+</script>
+</body>
+</html>
