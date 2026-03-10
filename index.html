@@ -19,12 +19,11 @@ body{
 /* ROTATING SKY */
 #sky{
   position:fixed;
-  width:200%;
-  height:200%;
-  top:-50%;
-  left:-50%;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
   z-index:-3;
-  transform-origin:50% 50%;
 }
 
 /* NEBULA */
@@ -37,17 +36,19 @@ body{
   opacity:0.25;
   pointer-events:none;
 }
+
 .nebula.one{background:radial-gradient(circle,#6b7cff,transparent 70%); left:20%; top:40%;}
 .nebula.two{background:radial-gradient(circle,#8f5cff,transparent 70%); left:70%; top:70%;}
 .nebula.three{background:radial-gradient(circle,#5cd6ff,transparent 70%); left:80%; top:10%;}
 
-/* STARS */
+/* BACKGROUND STARS */
 .star{
   position:absolute;
   border-radius:50%;
   opacity:0.9;
   animation:twinkle 3s infinite alternate;
 }
+
 @keyframes twinkle{
   from{opacity:0.2}
   to{opacity:1}
@@ -56,10 +57,12 @@ body{
 /* CONSTELLATIONS */
 #constellationLayer{
   position:absolute;
-  width:100%;
-  height:100%;
-  top:0;
-  left:0;
+  width:200%;
+  height:200%;
+  top:-50%;
+  left:-50%;
+  transform-origin:50% 50%;
+  z-index:-2;
   pointer-events:none;
 }
 
@@ -106,6 +109,7 @@ body{
   padding:20px;
   box-sizing:border-box;
 }
+
 #subtitle{
   font-size:18px;
   margin-top:10px;
@@ -120,6 +124,7 @@ body{
   position:relative;
   z-index:2;
 }
+
 #player{
   width:300px;
   height:200px;
@@ -130,6 +135,7 @@ body{
   cursor:pointer;
   z-index:3;
 }
+
 #lid{
   position:absolute;
   width:100%;
@@ -140,7 +146,9 @@ body{
   transform-origin:top;
   z-index:5;
 }
+
 .open{transform:rotateX(70deg);}
+
 .display{
   position:absolute;
   top:15px;
@@ -154,6 +162,7 @@ body{
   letter-spacing:2px;
   z-index:6;
 }
+
 #led{
   position:absolute;
   top:18px;
@@ -166,6 +175,7 @@ body{
   z-index:6;
   transition:0.2s;
 }
+
 #laser{
   position:absolute;
   top:65px;
@@ -179,7 +189,9 @@ body{
   transition:0.5s;
   z-index:4;
 }
+
 .reading{transform:rotate(18deg);}
+
 .speaker{
   position:absolute;
   width:40px;
@@ -188,8 +200,10 @@ body{
   top:60px;
   border-radius:4px;
 }
+
 .speaker.left{left:10px;}
 .speaker.right{right:10px;}
+
 .buttons{
   position:absolute;
   bottom:10px;
@@ -198,6 +212,7 @@ body{
   display:flex;
   gap:10px;
 }
+
 .btn{
   width:30px;
   height:30px;
@@ -211,6 +226,7 @@ body{
   box-shadow:0 2px 4px rgba(0,0,0,0.4);
   cursor:pointer;
 }
+
 #disc{
   width:120px;
   height:120px;
@@ -229,11 +245,13 @@ body{
     0 0 10px rgba(255,255,255,0.3);
   z-index:3;
 }
+
 #songTitle{
   margin-top:40px;
   font-size:18px;
   opacity:0.9;
 }
+
 #easterModal{
   position:fixed;
   top:50%;
@@ -249,6 +267,7 @@ body{
   text-align:center;
   box-shadow:0 0 20px rgba(255,255,255,0.5);
 }
+
 .particle{
   position:absolute;
   width:4px;
@@ -260,14 +279,17 @@ body{
   z-index:8;
   box-shadow:0 0 6px #fff,0 0 10px #fffb7d;
 }
+
 </style>
 </head>
 
 <body>
+
 <div id="sky">
   <div class="nebula one"></div>
   <div class="nebula two"></div>
   <div class="nebula three"></div>
+
   <div id="starLayer"></div>
   <svg id="constellationLayer"></svg>
 </div>
@@ -302,6 +324,7 @@ body{
 <audio id="popAudio" src="pop.mp3"></audio>
 
 <script>
+
 /* INTRO */
 const intro=document.getElementById("intro")
 const playerArea=document.getElementById("playerArea")
@@ -313,7 +336,7 @@ intro.onclick=()=>{
   },1000)
 }
 
-/* STARS */
+/* BACKGROUND STARS */
 const starColors=["#ffffff","#cfe9ff","#fff3d6"]
 for(let i=0;i<150;i++){
   const star=document.createElement("div")
@@ -329,8 +352,9 @@ for(let i=0;i<150;i++){
   document.getElementById("starLayer").appendChild(star)
 }
 
-/* CONSTELLATIONS */
+/* CONSTELLATIONS ROTATION */
 const constellationLayer = document.getElementById("constellationLayer")
+
 function drawConstellation(points){
   const group=document.createElementNS("http://www.w3.org/2000/svg","g")
   group.classList.add("constellation")
@@ -358,13 +382,101 @@ drawConstellation([{x:1000,y:250},{x:1040,y:290},{x:1080,y:250},{x:1040,y:210}])
 /* ROTATE ENTIRE SKY */
 let rotation=0
 function rotateSky(){
-  rotation+=0.0005 // 360deg in ~6 minutes
+  rotation+=0.0002 // 360deg in ~6 minutes
   document.getElementById("sky").style.transform=`rotate(${rotation}rad)`
   requestAnimationFrame(rotateSky)
 }
 rotateSky()
 
-/* PLAYER & EASTER STAR code remains the same as your previous script */
+/* PLAYER */
+const player=document.getElementById("player")
+const lid=document.getElementById("lid")
+let opened=false
+player.onclick=()=>{if(!opened){lid.classList.add("open");opened=true}}
+
+const songs=[{file:"song1.mp3",title:"54 Ultra - Upside Down"},{file:"song2.mp3",title:"American Flyer - Light Of Your Love"},{file:"song3.mp3",title:"American Flyer - Back In '57"},{file:"song4.mp3",title:"Barry Manilow - Can't Smile Without You"},{file:"song5.mp3",title:"Satellite Lovers - Best Friend"},{file:"song6.mp3",title:"The Fleetwoods - Come Softly To Me"},{file:"song7.mp3",title:"D'Sound - Do I Need A Reason"},{file:"song8.mp3",title:"Danny & The Dreamers - Eternal Love"},{file:"song9.mp3",title:"Father John Misty - Real Love Baby"},{file:"song10.mp3",title:"FUR - Holding Up The Sun"},{file:"song11.mp3",title:"Her's - If You Know What's Right"},{file:"song12.mp3",title:"The Emkays - Make It True"},{file:"song13.mp3",title:"Bread - Make It with You"},{file:"song14.mp3",title:"Chris Montez - The More I See You"},{file:"song15.mp3",title:"Thee Heart Tones - Forever & Ever"},{file:"song16.mp3",title:"The Beatles - Till There Was You"},{file:"song17.mp3",title:"The Softies - You and Only You"}]
+
+let currentSong=0
+const disc=document.getElementById("disc")
+const audio=document.getElementById("audio")
+const title=document.getElementById("songTitle")
+const led=document.getElementById("led")
+const laser=document.getElementById("laser")
+const popAudio=document.getElementById("popAudio")
+let discRotation=0
+let spinning=false
+
+function spinDisc(){
+  if(spinning){
+    discRotation+=0.4
+    disc.style.transform="rotate("+discRotation+"deg)"
+    requestAnimationFrame(spinDisc)
+  }
+}
+
+disc.onclick=()=>{
+  if(opened){
+    disc.style.right="90px"
+    playSong()
+  }
+}
+
+function playSong(){
+  audio.src=songs[currentSong].file
+  audio.play()
+  title.innerText="Now Playing: "+songs[currentSong].title
+  led.style.background="#35ff8a"
+  led.style.boxShadow="0 0 8px #35ff8a,0 0 16px #35ff8a"
+  laser.classList.add("reading")
+  spinning=true
+  spinDisc()
+}
+
+document.getElementById("play").onclick=()=>{audio.play();spinning=true;spinDisc()}
+document.getElementById("pause").onclick=()=>{audio.pause();spinning=false}
+document.getElementById("next").onclick=()=>{currentSong++;if(currentSong>=songs.length)currentSong=0;playSong()}
+document.getElementById("prev").onclick=()=>{currentSong--;if(currentSong<0)currentSong=songs.length-1;playSong()}
+
+/* EASTER STAR */
+let clickCount=0
+const modal=document.getElementById("easterModal")
+const easterStar=document.createElement("div")
+easterStar.style.position="absolute"
+easterStar.style.top="15%"
+easterStar.style.left="60%"
+easterStar.style.width="20px"
+easterStar.style.height="20px"
+easterStar.style.background="white"
+easterStar.style.clipPath="polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)"
+document.body.appendChild(easterStar)
+
+function createParticles(x,y){
+  for(let i=0;i<20;i++){
+    let p=document.createElement("div")
+    p.className="particle"
+    p.style.left=x+"px"
+    p.style.top=y+"px"
+    document.body.appendChild(p)
+    let angle=Math.random()*2*Math.PI
+    let distance=20+Math.random()*40
+    p.animate([{transform:"translate(0,0)",opacity:1},{transform:`translate(${Math.cos(angle)*distance}px,${Math.sin(angle)*distance}px)`,opacity:0}],{duration:800,fill:"forwards"})
+    setTimeout(()=>p.remove(),800)
+  }
+}
+
+easterStar.onclick=()=>{
+  clickCount++
+  easterStar.style.transform="scale("+(1+clickCount*0.3)+")"
+  if(clickCount>=5){
+    popAudio.play()
+    createParticles(easterStar.offsetLeft,easterStar.offsetTop)
+    easterStar.remove()
+    setTimeout(()=>{modal.style.display="block"},2000)
+  }
+}
+
+modal.onclick=()=>{modal.style.display="none"}
 </script>
+
 </body>
 </html>
