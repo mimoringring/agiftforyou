@@ -432,10 +432,34 @@ function playSong(){
   spinDisc()
 }
 
-document.getElementById("play").onclick=()=>{audio.play();spinning=true;spinDisc()}
-document.getElementById("pause").onclick=()=>{audio.pause();spinning=false}
+document.getElementById("play").onclick=()=>{
+  audio.play()
+  spinning=true
+  spinDisc()
+
+  // turn ON LED again
+  led.style.background="#35ff8a"
+  led.style.boxShadow="0 0 8px #35ff8a,0 0 16px #35ff8a"
+
+  // move laser again
+  laser.classList.add("reading")
+} 
+
+document.getElementById("pause").onclick=()=>{
+  audio.pause()
+  spinning=false
+
+  // turn OFF LED
+  led.style.background="#02150a"
+  led.style.boxShadow="0 0 3px #000"
+
+  // reset laser arm
+  laser.classList.remove("reading")
+}
+
 document.getElementById("next").onclick=()=>{currentSong++;if(currentSong>=songs.length)currentSong=0;playSong()}
 document.getElementById("prev").onclick=()=>{currentSong--;if(currentSong<0)currentSong=songs.length-1;playSong()}
+
 
 /* EASTER STAR */
 let clickCount=0
